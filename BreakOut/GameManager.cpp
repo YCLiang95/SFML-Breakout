@@ -43,9 +43,8 @@ void GameManager::Update() {
         }
     }
 
-    for (int i = 0; i < height; i++) {
-        left[i] = false;
-        right[i] = false;
+    for (int i = 0; i < width; i++) {
+        peddleCollision[i] = false;
     }
 
     peddle->Update();

@@ -12,39 +12,38 @@ void Peddle::Update() {
 
 
 	//keyboard control
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		mouseControl = false;
-		y -= speedY * GameManager::getInstance()->deltaTime;
-		if (y < 0) y = 0;
-	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+		x -= speedX * GameManager::getInstance()->deltaTime;
+		if (x < 0) x = 0;
+	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
 		mouseControl = false;
-		y += speedY * GameManager::getInstance()->deltaTime;
-		if (y + 100 > GameManager::getInstance()->height)
-			y = GameManager::getInstance()->height - 100;
+		x += speedX * GameManager::getInstance()->deltaTime;
+		if (x + 100 > GameManager::getInstance()->width)
+			x = GameManager::getInstance()->width - 100;
 	} else if (d > 1.0f)
 		mouseControl = true;
 
 	//mouse control
 	if (mouseControl) {
-		localPosition.y = localPosition.y - 50;
-		if (localPosition.y < 0) localPosition.y = 0;
-		if (localPosition.y + 100 > GameManager::getInstance()->height) localPosition.y = GameManager::getInstance()->height - 100;
+		localPosition.x = localPosition.x - 50;
+		if (localPosition.x < 0) localPosition.x = 0;
+		if (localPosition.x + 100 > GameManager::getInstance()->width) localPosition.x = GameManager::getInstance()->width - 100;
 
-		if (y > localPosition.y)
-			y -= std::max(speedY, y - localPosition.y) * GameManager::getInstance()->deltaTime;
+		if (x > localPosition.x)
+			x -= std::max(speedX, x - localPosition.x) * GameManager::getInstance()->deltaTime;
 		else
-			y += std::max(speedY, localPosition.y - y) * GameManager::getInstance()->deltaTime;
+			x += std::max(speedX, localPosition.x - x) * GameManager::getInstance()->deltaTime;
 	}
 
-	ParticleSystem::getInstance()->Add(new Particle(x, y + 50, sf::Color::Red, 0.2f));
+	//ParticleSystem::getInstance()->Add(new Particle(x, y + 50, sf::Color::Red, 0.2f));
 
-	int t = (int)y;
+	//std::cout << x << std::endl;
+	int t = (int)x;
   	for (int i = 0; i < 100; i++) {
-		if (t + i < GameManager::getInstance()->height)
-			if (x < GameManager::getInstance()->width / 2)
-				GameManager::getInstance()->left[t + i] = true;
-			else
-				GameManager::getInstance()->right[t + i] = true;
+		if (t + i < GameManager::getInstance()->width)
+				GameManager::getInstance()->peddleCollision[t + i] = true;
+
 	}
 
 }
@@ -60,9 +59,9 @@ Peddle::Peddle(float x, float y) {
 
 	mouseControl = false;
 
-	speedX = 0.0f;
+	speedX = 250.0f;
 	speedY = 250.0f;
 
-	shape.setSize(sf::Vector2f(10, 100));
+	shape.setSize(sf::Vector2f(100, 10));
 	shape.setFillColor(sf::Color(255, 0, 0));
 }

@@ -10,14 +10,14 @@ class GameManager {
     GameManager() {
         width = 800;
         height = 600;
-        window.create(sf::VideoMode(width, height), "Pong");
+        window.create(sf::VideoMode(width, height), "Breakout");
 
         ball = new Ball();
         ball2 = new Ball();
-        peddle = new Peddle(0, 0);
 
-        left = new bool[height];
-        right = new bool[height];
+        peddle = new Peddle(400, 580);
+
+        peddleCollision = new bool[width];
 
         leftScore = 0.0f;
         rightScore = 0.0f;
@@ -64,8 +64,7 @@ public:
     Ball* ball2;
     Peddle* peddle;
 
-    bool* left;
-    bool* right;
+    bool* peddleCollision;
 
     int leftScore;
     int rightScore;
@@ -91,8 +90,6 @@ public:
 
     ~GameManager() {
         delete(ball);
-        //for (int i = 0; i < 4; i++)
-            //delete (peddles[i]);
         delete peddle;
     }
 

@@ -23,63 +23,51 @@ void Ball::Update() {
 	float  dx = x + speedx * GameManager::getInstance()->deltaTime;
 	float dy = y + speedy * GameManager::getInstance()->deltaTime;
 
-	if (dy < 0 || dy > GameManager::getInstance()->height - shape.getRadius() * 2) {
+	if (dy < 0) {
 		speedy = -speedy;
 		dy = std::max(dy, 1.0f);
-		dy = std::min(GameManager::getInstance()->height - shape.getRadius() * 2, dy);
-	}
 
-	if (dx < 0 || dx > GameManager::getInstance()->width - shape.getRadius() * 2) {
+	} else if (dy > GameManager::getInstance()->height - shape.getRadius() * 2) {
 		float a = dx - x;
 		float b = dy - y;
 		float m = 0;
-		if (b == 0)
+
+		if (a == 0)
 			m = 0;
 		else
-			m = a / b;
+			m = b / a;
 
-		if (dx < 0) {
-			int c = (int)(dy + (0 - dx) * m);
-			bool bounce = false;
-			for (int i = 0; i < radius * 2; i++)
-				if (c + i < GameManager::getInstance()->height && GameManager::getInstance()->left[c + i] == true)
-					bounce = true;
-			if (bounce){
-				speedx = -speedx;
-				dx = std::max(1.0f, dx);
-				dx = std::min((float)GameManager::getInstance()->width - shape.getRadius() * 2, dx);
-				for (int i = 0; i < 50; i++) {
-					Particle* p = new Particle(x, y, sf::Color::Blue);
-					GameManager::getInstance()->ps->Add(p);
-				}
-			} else {
-				Reset(true);
-				GameManager::getInstance()->rightScore += 1;
-				dx = x;
-				dy = y;
+		int c = (int)(x + (dy + radius - GameManager::getInstance()->height) * m);
+		bool bounce = false;
+
+
+		for (int i = 0; i < radius * 2; i++)
+			if (c + i < GameManager::getInstance()->width && GameManager::getInstance()->peddleCollision[c + i] == true)
+				bounce = true;
+
+
+		if (bounce) {
+			speedy = -speedy;
+			dy = std::max(1.0f, dy);
+			dy = std::min((float)GameManager::getInstance()->height - shape.getRadius() * 2, dy);
+			for (int i = 0; i < 50; i++) {
+				Particle* p = new Particle(x, y, sf::Color::Blue);
+				GameManager::getInstance()->ps->Add(p);
 			}
+
 		} else {
-			int c = (int)(y + (dx + radius - GameManager::getInstance()->width) * m);
-			bool bounce = false;
-			for (int i = 0; i < radius * 2; i++)
-				if (c + i < GameManager::getInstance()-> height && GameManager::getInstance()->right[c + i] == true)
-					bounce = true;
-			if (bounce) {
-				speedx = -speedx;
-				dx = std::max(1.0f, dx);
-				dx = std::min((float)GameManager::getInstance()->width - shape.getRadius() * 2, dx);
-				for (int i = 0; i < 50; i++) {
-					Particle* p = new Particle(x, y, sf::Color::Blue);
-					GameManager::getInstance()->ps->Add(p);
-				}
-			} else {
-				Reset();
-				GameManager::getInstance()->leftScore += 1;
-				dx = x;
-				dy = y;
-			}
+			Reset();
+			GameManager::getInstance()->leftScore += 1;
+			dx = x;
+			dy = y;
 		}
+	}
 
+
+	if (dx < 0 || dx > GameManager::getInstance()->width - shape.getRadius() * 2) {
+		speedx = -speedx;
+		dx = std::max(dx, 1.0f);
+		dx = std::min(GameManager::getInstance()->width - shape.getRadius() * 2 - 1.0f, dx);
 	}
 
 	ParticleSystem::getInstance()->Add(new Particle(x + radius / 2, y + radius / 2, sf::Color::Blue, 0.2f));
