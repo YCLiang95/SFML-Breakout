@@ -12,6 +12,8 @@ public:
 	//The direction of the ball
 	float speedx, speedy;
 
+	bool isLauched;
+
 	sf::CircleShape shape;
 
 	Ball();

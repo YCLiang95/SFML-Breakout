@@ -45,10 +45,8 @@ int Brick::shouldCollide(float x, float y, float dx, float dy, float radius) {
 	float left = y + (dx  - this->x) * n;
 	float right = y + (dx  - (this->x + width)) * n;
 
-	if ((up >= this->x && up <= this->x + width && abs(y + m * (dx - x) - this->y) < radius) || (button >= this->x && button <= this->x + width && abs(y + m * (dx - x) - this->y - height) < radius)) {
-		std::cout << "Collide: " << this->x << "," << this->y << " " << up << "," << button << std::endl;
+	if ((up >= this->x && up <= this->x + width && abs(y + m * (dx - x) - this->y) < radius) || (button >= this->x && button <= this->x + width && abs(y + m * (dx - x) - this->y - height) < radius))
 		return 1;
-	}
 	else if (left >= this->y && left <= this->y + height && abs(x + n * (dy - y) - this->x) < radius || right >= this->y && right <= this->y + height && abs(x + n * (dy - y) - this->x - width) < radius)
 		return 2;
 	else

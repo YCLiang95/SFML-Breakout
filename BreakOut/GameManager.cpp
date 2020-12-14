@@ -8,27 +8,30 @@ void GameManager::Update() {
     if (!isRunning) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
             isRunning = true;
-            leftScore = 0;
-            rightScore = 0;
+            life = 3;
+            bricksCount = bricks.size();
+            for (int i = 0; i < bricksCount; i++)
+                bricks[i]->isAlive = true;
             ball->Reset();
-            //ball2->Reset();
             timeScale = 1.0f;
         }
-    } else if (leftScore > 5 || rightScore > 5) {
+    }
+    else if (life <= 0) {
         isRunning = false;
-        if (leftScore > 5)
-            winningText.setString("Left Won! Press Enter to Play Again!");
-        else
-            winningText.setString("Right Won! Press Enter to Play Again!");
+        winningText.setString("You! Press Enter to Play Again!");
+    } else if (bricksCount <= 0){
+        isRunning = false;
+        winningText.setString("You Won! Press Enter to Play Again!");
+
         victorySound.play();
     }
 
-    if (!plusPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+    if (!plusPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Add)) {
         plusPressed = true;
         timeScale *= 2;
     }
 
-    if (plusPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    if (plusPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
         plusPressed = false;
 
     deltaTime = (float)(clock() - lastTime) / CLOCKS_PER_SEC * timeScale;
@@ -46,7 +49,6 @@ void GameManager::Update() {
     peddle->Update();
 
     ball->Update();
-   // ball2->Update();
 
     ps->Update();
 
@@ -56,10 +58,9 @@ void GameManager::Update() {
 void GameManager::Draw() {
     window.clear();
     ball->Draw();
-    //ball2->Draw();
 
-    scoreTextLeft.setString(std::to_string(leftScore));
-    scoreTextRight.setString(std::to_string(rightScore));
+    scoreTextLeft.setString("Life: " + std::to_string(life));
+    scoreTextRight.setString(std::to_string(bricksCount) + " bricks remain");
     window.draw(scoreTextLeft);
     window.draw(scoreTextRight);
 

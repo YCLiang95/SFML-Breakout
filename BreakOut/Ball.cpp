@@ -10,12 +10,24 @@ Ball::Ball() {
 	y = 300;
 	speedx = 400.0f;
 	speedy = 300.0f;
+	isLauched = false;
 	radius = 10.0f;
 	shape.setRadius(radius);
 	shape.setFillColor(sf::Color(255,255,255));
 }
 
 void Ball::Update() {
+
+	if (!isLauched) {
+		x = GameManager::getInstance()->peddle->x + 50.0f - radius;
+		y = GameManager::getInstance()->peddle->y - 15.0f - radius;
+		shape.setPosition(x, y);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			isLauched = true;
+		else
+			return;
+	}
 
 	if (!GameManager::getInstance()->isRunning)
 		return;
@@ -40,7 +52,7 @@ void Ball::Update() {
 
 	} else if (dy > GameManager::getInstance()->height){
 		Reset();
-		GameManager::getInstance()->leftScore += 1;
+		GameManager::getInstance()->life -= 1;
 		dx = x;
 		dy = y;
 	}
@@ -59,11 +71,15 @@ void Ball::Update() {
 			dx = x;
 			dy = y;
 			GameManager::getInstance()->bricks[i]->isAlive = false;
+			GameManager::getInstance()->bricksCount -= 1;
+			break;
 		} else if (k == 2) {
 			speedx = -speedx;
 			dx = x;
 			dy = y;
 			GameManager::getInstance()->bricks[i]->isAlive = false;
+			GameManager::getInstance()->bricksCount -= 1;
+			break;
 		}
 	}
 
@@ -89,12 +105,11 @@ void Ball::Reset(bool left) {
 
 	GameManager::getInstance()->timeScale += 0.1f;
 
-	x = GameManager::getInstance()->width / 2;
-	y = GameManager::getInstance()->height / 2;
+	isLauched = false;
+
 	speedx = GameManager::getInstance()->width / 6 + rand() % (GameManager::getInstance()->width / 6);
 	speedy = GameManager::getInstance()->height / 6 + rand() % (GameManager::getInstance()->height / 6);
-	if (rand() % 2 == 0)
-		speedy *= -1;
+	speedy *= -1;
 	if (left) speedx *= -1;
 	shape.setPosition(x, y);
 }

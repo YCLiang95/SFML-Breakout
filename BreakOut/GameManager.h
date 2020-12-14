@@ -14,12 +14,11 @@ class GameManager {
         window.create(sf::VideoMode(width, height), "Breakout");
 
         ball = new Ball();
-        //ball2 = new Ball();
 
         peddle = new Peddle(400, 580);
 
-        leftScore = 0.0f;
-        rightScore = 0.0f;
+        life = 3;
+        bricksCount = 42;
 
         timeScale = 1.0f;
 
@@ -31,10 +30,12 @@ class GameManager {
                 bricks.push_back(new Brick(40.0f + i * 52, 100.0f + j * 12));
             }
 
+        bricksCount = bricks.size();
+
         ps = ParticleSystem::getInstance();
 
         plusPressed = false;
-        isRunning = false;
+        isRunning = true;
 
         if (!bufferVictorySound.loadFromFile("victory.wav")) {
             std::cout << "Failded to load victory sound" << std::endl;
@@ -65,13 +66,12 @@ public:
     void LoadFont();
 
     Ball* ball;
-    //Ball* ball2;
 
     Peddle* peddle;
     vector<Brick*> bricks;
 
-    int leftScore;
-    int rightScore;
+    int life;
+    int bricksCount;
 
     clock_t lastTime;
     float deltaTime;
