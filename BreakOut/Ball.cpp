@@ -10,8 +10,8 @@ Ball::Ball() {
 	y = 300;
 	speedx = 400.0f;
 	speedy = 300.0f;
-	radius = 20.0f;
-	shape.setRadius(20.0f);
+	radius = 10.0f;
+	shape.setRadius(radius);
 	shape.setFillColor(sf::Color(255,255,255));
 }
 
@@ -27,40 +27,22 @@ void Ball::Update() {
 		speedy = -speedy;
 		dy = std::max(dy, 1.0f);
 
-	} else if (dy > GameManager::getInstance()->height - shape.getRadius() * 2) {
-		float a = dx - x;
-		float b = dy - y;
-		float m = 0;
+	}
 
-		if (a == 0)
-			m = 0;
-		else
-			m = b / a;
-
-		int c = (int)(x + (dy + radius - GameManager::getInstance()->height) * m);
-		bool bounce = false;
-
-
-		for (int i = 0; i < radius * 2; i++)
-			if (c + i < GameManager::getInstance()->width && GameManager::getInstance()->peddleCollision[c + i] == true)
-				bounce = true;
-
-
-		if (bounce) {
-			speedy = -speedy;
-			dy = std::max(1.0f, dy);
-			dy = std::min((float)GameManager::getInstance()->height - shape.getRadius() * 2, dy);
-			for (int i = 0; i < 50; i++) {
-				Particle* p = new Particle(x, y, sf::Color::Blue);
-				GameManager::getInstance()->ps->Add(p);
-			}
-
-		} else {
-			Reset();
-			GameManager::getInstance()->leftScore += 1;
-			dx = x;
-			dy = y;
+	if (GameManager::getInstance()->peddle->shouldCollide(x, y, dx, dy, radius)) {
+		speedy = -speedy;
+		dy = std::max(1.0f, dy);
+		dy = std::min((float)GameManager::getInstance()->height - 20.0f - shape.getRadius() * 2, dy);
+		for (int i = 0; i < 50; i++) {
+			Particle* p = new Particle(x, y, sf::Color::Blue);
+			GameManager::getInstance()->ps->Add(p);
 		}
+
+	} else if (dy > GameManager::getInstance()->height){
+		Reset();
+		GameManager::getInstance()->leftScore += 1;
+		dx = x;
+		dy = y;
 	}
 
 
@@ -70,7 +52,22 @@ void Ball::Update() {
 		dx = std::min(GameManager::getInstance()->width - shape.getRadius() * 2 - 1.0f, dx);
 	}
 
-	ParticleSystem::getInstance()->Add(new Particle(x + radius / 2, y + radius / 2, sf::Color::Blue, 0.2f));
+	for (int i = 0; i < GameManager::getInstance()->bricks.size(); i++) {
+		float k = GameManager::getInstance()->bricks[i]->shouldCollide(x, y, dx, dy, radius);
+		if (k == 1) {
+			speedy = -speedy;
+			dx = x;
+			dy = y;
+			GameManager::getInstance()->bricks[i]->isAlive = false;
+		} else if (k == 2) {
+			speedx = -speedx;
+			dx = x;
+			dy = y;
+			GameManager::getInstance()->bricks[i]->isAlive = false;
+		}
+	}
+
+	//ParticleSystem::getInstance()->Add(new Particle(x + radius / 2, y + radius / 2, sf::Color::Blue, 0.2f));
 
 	x = dx;
 	y = dy;

@@ -11,7 +11,7 @@ void GameManager::Update() {
             leftScore = 0;
             rightScore = 0;
             ball->Reset();
-            ball2->Reset();
+            //ball2->Reset();
             timeScale = 1.0f;
         }
     } else if (leftScore > 5 || rightScore > 5) {
@@ -43,14 +43,10 @@ void GameManager::Update() {
         }
     }
 
-    for (int i = 0; i < width; i++) {
-        peddleCollision[i] = false;
-    }
-
     peddle->Update();
 
     ball->Update();
-    ball2->Update();
+   // ball2->Update();
 
     ps->Update();
 
@@ -60,7 +56,7 @@ void GameManager::Update() {
 void GameManager::Draw() {
     window.clear();
     ball->Draw();
-    ball2->Draw();
+    //ball2->Draw();
 
     scoreTextLeft.setString(std::to_string(leftScore));
     scoreTextRight.setString(std::to_string(rightScore));
@@ -73,6 +69,9 @@ void GameManager::Draw() {
     peddle->Draw();
 
     ps->Draw();
+
+    for (int i = 0; i < bricks.size(); i++)
+        bricks[i]->Draw();
 
     window.display();
 }

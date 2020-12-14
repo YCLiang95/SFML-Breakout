@@ -36,16 +36,6 @@ void Peddle::Update() {
 			x += std::max(speedX, localPosition.x - x) * GameManager::getInstance()->deltaTime;
 	}
 
-	//ParticleSystem::getInstance()->Add(new Particle(x, y + 50, sf::Color::Red, 0.2f));
-
-	//std::cout << x << std::endl;
-	int t = (int)x;
-  	for (int i = 0; i < 100; i++) {
-		if (t + i < GameManager::getInstance()->width)
-				GameManager::getInstance()->peddleCollision[t + i] = true;
-
-	}
-
 }
 
 void Peddle::Draw() {
@@ -64,4 +54,23 @@ Peddle::Peddle(float x, float y) {
 
 	shape.setSize(sf::Vector2f(100, 10));
 	shape.setFillColor(sf::Color(255, 0, 0));
+}
+
+bool Peddle::shouldCollide(float x, float y, float dx, float dy, float radius) {
+
+	float a = dx - x;
+	float b = dy - y;
+	float m = 0;
+
+	if (a == 0)
+		m = 0;
+	else
+		m = b / a;
+
+	float up = x + (dy - this->y) * m;
+
+	if ((up >= this->x && up <= this->x + 100.0f && abs(y + m * (dx - x) - this->y) < radius))
+		return true;
+	else
+		return false;
 }

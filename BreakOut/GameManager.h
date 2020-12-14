@@ -5,6 +5,7 @@
 #include "Ball.h"
 #include "Peddle.h"
 #include "ParticleSystem.h"
+#include "Brick.h"
 
 class GameManager {
     GameManager() {
@@ -13,11 +14,9 @@ class GameManager {
         window.create(sf::VideoMode(width, height), "Breakout");
 
         ball = new Ball();
-        ball2 = new Ball();
+        //ball2 = new Ball();
 
         peddle = new Peddle(400, 580);
-
-        peddleCollision = new bool[width];
 
         leftScore = 0.0f;
         rightScore = 0.0f;
@@ -26,6 +25,11 @@ class GameManager {
 
         lastTime = clock();
         deltaTime = 0;
+
+        for (int i = 0; i < 14; i ++)
+            for (int j = 0; j < 3; j++) {
+                bricks.push_back(new Brick(40.0f + i * 52, 100.0f + j * 12));
+            }
 
         ps = ParticleSystem::getInstance();
 
@@ -61,10 +65,10 @@ public:
     void LoadFont();
 
     Ball* ball;
-    Ball* ball2;
-    Peddle* peddle;
+    //Ball* ball2;
 
-    bool* peddleCollision;
+    Peddle* peddle;
+    vector<Brick*> bricks;
 
     int leftScore;
     int rightScore;

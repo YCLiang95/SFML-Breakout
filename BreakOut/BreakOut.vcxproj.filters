@@ -18,9 +18,6 @@
     <ClInclude Include="main.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="Obstacle.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
@@ -30,27 +27,21 @@
     <ClInclude Include="Peddle.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="Repulsor.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="Ball.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Repulsor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Peddle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Obstacle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
@@ -63,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Brick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

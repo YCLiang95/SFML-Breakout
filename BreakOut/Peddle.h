@@ -17,4 +17,6 @@ public:
 
 	void Update();
 	void Draw();
+
+	bool shouldCollide(float x, float y, float dx, float dy, float radius);
 };
