@@ -14,6 +14,24 @@ Ball::Ball() {
 	radius = 10.0f;
 	shape.setRadius(radius);
 	shape.setFillColor(sf::Color(255,255,255));
+
+	if (!bufferHitSound.loadFromFile("hit.wav")) {
+		std::cout << "Failded to load hit sound" << std::endl;
+	}
+
+	if (!bufferLoseSound.loadFromFile("score.wav")) {
+		std::cout << "Failded to load lose sound" << std::endl;
+	}
+
+	hitSound.setBuffer(bufferHitSound);
+	loseSound.setBuffer(bufferLoseSound);
+
+	if (!texture.loadFromFile("ball.png")) {
+		std::cout << "Faild to load image" << std::endl;
+		return;
+	}
+	sprite.setTexture(texture);
+	sprite.setScale(0.15f, 0.15f);
 }
 
 void Ball::Update() {
@@ -38,7 +56,7 @@ void Ball::Update() {
 	if (dy < 0) {
 		speedy = -speedy;
 		dy = std::max(dy, 1.0f);
-
+		loseSound.play();
 	}
 
 	if (GameManager::getInstance()->peddle->shouldCollide(x, y, dx, dy, radius)) {
@@ -49,12 +67,13 @@ void Ball::Update() {
 			Particle* p = new Particle(x, y, sf::Color::Blue);
 			GameManager::getInstance()->ps->Add(p);
 		}
-
+		hitSound.play();
 	} else if (dy > GameManager::getInstance()->height){
 		Reset();
 		GameManager::getInstance()->life -= 1;
 		dx = x;
 		dy = y;
+		loseSound.play();
 	}
 
 
@@ -62,36 +81,43 @@ void Ball::Update() {
 		speedx = -speedx;
 		dx = std::max(dx, 1.0f);
 		dx = std::min(GameManager::getInstance()->width - shape.getRadius() * 2 - 1.0f, dx);
+		loseSound.play();
 	}
 
 	for (int i = 0; i < GameManager::getInstance()->bricks.size(); i++) {
 		float k = GameManager::getInstance()->bricks[i]->shouldCollide(x, y, dx, dy, radius);
-		if (k == 1) {
-			speedy = -speedy;
+		if (k != 0) {
+			if (k == 1)
+				speedy = -speedy;
+			else if (k == 2)
+				speedx = -speedx;
 			dx = x;
 			dy = y;
-			GameManager::getInstance()->bricks[i]->isAlive = false;
-			GameManager::getInstance()->bricksCount -= 1;
+			hitSound.play();
+			if (!GameManager::getInstance()->bricks[i]->isInvincible) {
+				GameManager::getInstance()->bricks[i]->isAlive = false;
+				GameManager::getInstance()->bricksCount -= 1;
+				for (int i = 0; i < 50; i++) {
+					Particle* p = new Particle(x, y, sf::Color::Blue);
+					GameManager::getInstance()->ps->Add(p);
+				}
+			}
 			break;
-		} else if (k == 2) {
-			speedx = -speedx;
-			dx = x;
-			dy = y;
-			GameManager::getInstance()->bricks[i]->isAlive = false;
-			GameManager::getInstance()->bricksCount -= 1;
-			break;
-		}
+		} 
 	}
 
-	//ParticleSystem::getInstance()->Add(new Particle(x + radius / 2, y + radius / 2, sf::Color::Blue, 0.2f));
+	ParticleSystem::getInstance()->Add(new Particle(x + radius / 2, y + radius / 2, sf::Color::Blue, 0.2f));
 
 	x = dx;
 	y = dy;
-	shape.setPosition(x, y);
+	//shape.setPosition(x, y);
 }
 
 void Ball::Draw() {
+	shape.setPosition(x, y);
+	sprite.setPosition(x, y);
 	GameManager::getInstance()->window.draw(shape);
+	GameManager::getInstance()->window.draw(sprite);
 }
 
 //Actually should be called hit
@@ -102,8 +128,6 @@ void Ball::Reset(bool left) {
 		Particle* p = new Particle(x ,y, sf::Color::Green);
 		GameManager::getInstance()->ps->Add(p);
 	}
-
-	GameManager::getInstance()->timeScale += 0.1f;
 
 	isLauched = false;
 

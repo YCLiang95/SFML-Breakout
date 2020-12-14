@@ -18,19 +18,28 @@ class GameManager {
         peddle = new Peddle(400, 580);
 
         life = 3;
-        bricksCount = 42;
+        //bricksCount = 42;
 
         timeScale = 1.0f;
 
         lastTime = clock();
         deltaTime = 0;
 
-        for (int i = 0; i < 14; i ++)
-            for (int j = 0; j < 3; j++) {
-                bricks.push_back(new Brick(40.0f + i * 52, 100.0f + j * 12));
-            }
+        //for (int i = 0; i < 14; i ++)
+        //    for (int j = 0; j < 3; j++) {
+        //        bricks.push_back(new Brick(40.0f + i * 52, 100.0f + j * 12));
+        //    }
 
-        bricksCount = bricks.size();
+        bricksCount = 0;
+        for (int i = 0; i < 14; i++)
+            for (int j = 0; j < 5; j++) {
+                if (rand() % 100 > 50) {
+                    bricks.push_back(new Brick(40.0f + i * 52, 100.0f + j * 12));
+                    if (!bricks[bricks.size() - 1]->isInvincible)
+                        bricksCount++;
+                }
+            }
+        //bricksCount = bricks.size();
 
         ps = ParticleSystem::getInstance();
 

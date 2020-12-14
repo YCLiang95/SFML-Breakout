@@ -16,6 +16,14 @@ public:
 
 	sf::CircleShape shape;
 
+	sf::SoundBuffer bufferHitSound;
+	sf::SoundBuffer bufferLoseSound;
+	sf::Sound hitSound;
+	sf::Sound loseSound;
+
+	sf::Texture texture;
+	sf::Sprite sprite;
+
 	Ball();
 
 public:

@@ -6,17 +6,32 @@ Brick::Brick(float x, float y) {
 	this->y = y;
 
 	shape.setPosition(x, y);
+	sprite.setPosition(x, y);
 	height = 10;
 	width = 50;
 	isAlive = true;
 
 	shape.setSize(sf::Vector2f(50, 10));
 	shape.setFillColor(sf::Color(255, 0, 0));
+
+	if (rand() % 100 > 80)
+		isInvincible = true;
+	else
+		isInvincible = false;
+
+	if (!texture.loadFromFile("brick.png")) {
+		std::cout << "Faild to load image" << std::endl;
+		return;
+	}
+	sprite.setTexture(texture);
+	sprite.setScale(1.0f, 1.0f);
 }
 
 void Brick::Draw() {
 	if (isAlive) {
 		GameManager::getInstance()->window.draw(shape);
+		if (isInvincible)
+			GameManager::getInstance()->window.draw(sprite);
 	}
 }
 

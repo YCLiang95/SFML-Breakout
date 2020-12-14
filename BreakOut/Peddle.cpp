@@ -36,6 +36,8 @@ void Peddle::Update() {
 			x += std::max(speedX, localPosition.x - x) * GameManager::getInstance()->deltaTime;
 	}
 
+	//ParticleSystem::getInstance()->Add(new Particle(x + 50, y + 10, sf::Color::Blue, 0.2f));
+
 }
 
 void Peddle::Draw() {

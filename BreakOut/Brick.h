@@ -8,7 +8,12 @@ public:
 
 	bool isAlive;
 
+	sf::Texture texture;
+	sf::Sprite sprite;
+
 	sf::RectangleShape shape;
+
+	bool isInvincible;
 
 	Brick(float x, float y);
 

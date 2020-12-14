@@ -9,9 +9,19 @@ void GameManager::Update() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
             isRunning = true;
             life = 3;
-            bricksCount = bricks.size();
-            for (int i = 0; i < bricksCount; i++)
-                bricks[i]->isAlive = true;
+
+            bricks.clear();
+
+            bricksCount = 0;
+            for (int i = 0; i < 14; i++)
+                for (int j = 0; j < 5; j++) {
+                    if (rand() % 100 > 50) {
+                        bricks.push_back(new Brick(40.0f + i * 52, 100.0f + j * 12));
+                        if (!bricks[bricks.size() - 1]->isInvincible)
+                            bricksCount++;
+                    }
+                }
+
             ball->Reset();
             timeScale = 1.0f;
         }
